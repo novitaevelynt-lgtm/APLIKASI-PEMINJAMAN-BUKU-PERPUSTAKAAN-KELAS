@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Perpustakaan Kelas</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .bg-cream { background-color: #FDFBF7; }
+        .bg-soft-blue { background-color: #E6F0FA; }
+        .text-primary-blue { color: #1E3A8A; }
+        .bg-primary-blue { background-color: #1E3A8A; }
+    </style>
+</head>
+<body class="bg-cream text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- TOP HEADER -->
+    <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shadow-sm relative z-20">
+        <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-soft-blue rounded-lg flex items-center justify-center border border-primary-blue overflow-hidden">
+                <img src="logo perpustakaan.jpg" alt="Logo" class="object-cover w-full h-full">
+            </div>
+            <h1 class="text-md md:text-lg font-bold text-primary-blue tracking-wide">APLIKASI PEMINJAMAN BUKU PERPUSTAKAAN KELAS</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <!-- PENCARIAN DASHBOARD -->
+            <div class="relative hidden sm:block">
+                <input type="text" id="inputCariDashboard" oninput="filterDashboard()" placeholder="CARI DI DASHBOARD..." class="px-4 py-1.5 pl-9 border border-gray-300 rounded-lg text-sm bg-cream focus:outline-none focus:ring-1 focus:ring-blue-800">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+            </div>
+            <div onclick="toggleProfilModal()" class="flex items-center space-x-2 bg-soft-blue px-3 py-1.5 rounded-lg border border-blue-200 cursor-pointer hover:bg-blue-100 transition">
+                <i class="fa-solid fa-user text-primary-blue"></i>
+                <span id="profilName" class="text-sm font-semibold text-primary-blue">PROFIL</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 relative">
+        <!-- SIDEBAR -->
+        <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 p-4 space-y-2 transition-all duration-300 absolute md:relative z-10 h-full shadow-md md:shadow-none">
+            <div class="flex items-center justify-between mb-4 px-2">
+                <button onclick="toggleSidebar()" class="text-primary-blue hover:text-blue-900 focus:outline-none text-xl">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">MENU</span>
+            </div>
+
+            <a href="dashboard.html" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium bg-soft-blue text-primary-blue font-bold flex items-center space-x-3">
+                <i class="fa-solid fa-chart-pie w-5"></i><span>DASHBOARD</span>
+            </a>
+            <a href="data_anggota.html" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-soft-blue text-gray-700 flex items-center space-x-3">
+                <i class="fa-solid fa-users w-5"></i><span>DATA ANGGOTA</span>
+            </a>
+            <a href="data_buku.html" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-soft-blue text-gray-700 flex items-center space-x-3">
+                <i class="fa-solid fa-book w-5"></i><span>DATA BUKU</span>
+            </a>
+            
+            <div>
+                <button onclick="toggleDropdownTransaksi()" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-soft-blue text-gray-700 flex items-center justify-between">
+                    <span class="flex items-center space-x-3"><i class="fa-solid fa-right-left w-5"></i><span>TRANSAKSI</span></span>
+                    <i id="transaksiArrow" class="fa-solid fa-chevron-down text-xs"></i>
+                </button>
+                <div id="subTransaksi" class="hidden pl-6 space-y-1 mt-1">
+                    <a href="peminjaman.html" class="block px-4 py-2 rounded-lg text-sm text-gray-600 hover:bg-soft-blue hover:text-primary-blue"><i class="fa-solid fa-arrow-up-right-from-square mr-2"></i>PEMINJAMAN</a>
+                    <a href="pengembalian.html" class="block px-4 py-2 rounded-lg text-sm text-gray-600 hover:bg-soft-blue hover:text-primary-blue"><i class="fa-solid fa-arrow-rotate-left mr-2"></i>PENGEMBALIAN</a>
+                </div>
+            </div>
+
+            <div>
+                <a href="laporan.html" class="w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-soft-blue text-gray-700 flex items-center space-x-3">
+                    <i class="fa-solid fa-file-lines w-5"></i><span>LAPORAN</span>
+                </a>
+            </div>
+            <div class="pt-6">
+                <a href="login.html" class="w-full text-left px-4 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 flex items-center space-x-3">
+                    <i class="fa-solid fa-right-from-bracket w-5"></i><span>LOGOUT</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (DASHBOARD STATISTIK OTOMATIS) -->
+        <main class="flex-1 p-8 space-y-6">
+            <h2 class="text-xl font-bold text-primary-blue">SELAMAT DATANG, <span id="actorName">"ADMIN"</span></h2>
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Total Koleksi Buku -->
+                    <div class="card-stat bg-soft-blue p-6 rounded-lg border border-blue-200 text-center shadow-sm" data-title="total koleksi buku">
+                        <h3 class="text-gray-600 font-semibold mb-2">TOTAL KOLEKSI BUKU</h3>
+                        <p id="valTotalKoleksi" class="text-3xl font-bold text-primary-blue">0</p>
+                    </div>
+
+                    <!-- Total Kategori -->
+                    <div class="card-stat bg-soft-blue p-6 rounded-lg border border-blue-200 text-center shadow-sm" data-title="total kategori">
+                        <h3 class="text-gray-600 font-semibold mb-2">TOTAL KATEGORI</h3>
+                        <p id="valTotalKategori" class="text-3xl font-bold text-primary-blue">0</p>
+                    </div>
+
+                    <!-- Total Peminjaman -->
+                    <div class="card-stat bg-soft-blue p-6 rounded-lg border border-blue-200 text-center shadow-sm" data-title="total peminjaman">
+                        <h3 class="text-gray-600 font-semibold mb-2">TOTAL PEMINJAMAN</h3>
+                        <p id="valTotalPinjam" class="text-3xl font-bold text-primary-blue">0</p>
+                    </div>
+
+                    <!-- Total Pengembalian -->
+                    <div class="card-stat bg-soft-blue p-6 rounded-lg border border-blue-200 text-center shadow-sm" data-title="total pengembalian">
+                        <h3 class="text-gray-600 font-semibold mb-2">TOTAL PENGEMBALIAN</h3>
+                        <p id="valTotalKembali" class="text-3xl font-bold text-primary-blue">0</p>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL PROFIL -->
+    <div id="profilModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white p-6 rounded-xl w-full max-w-sm shadow-xl">
+            <h3 class="text-lg font-bold text-primary-blue mb-4">Informasi Profil</h3>
+            <p class="text-sm text-gray-600 mb-2">Username Aktif: <strong id="modalUser">Admin</strong></p>
+            <button onclick="toggleProfilModal()" class="w-full bg-primary-blue text-white py-2 rounded-lg text-sm font-semibold mt-4">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        const storedName = localStorage.getItem('namaAktor');
+        if(storedName) {
+            document.getElementById('actorName').innerText = `"${storedName.toUpperCase()}"`;
+            document.getElementById('profilName').innerText = storedName.toUpperCase();
+            document.getElementById('modalUser').innerText = storedName;
+        }
+
+        // Sinkronisasi data otomatis dari halaman Buku & Transaksi
+        function muatStatistikDashboard() {
+            // 1. Ambil Data Buku dari LocalStorage
+            let daftarBuku = JSON.parse(localStorage.getItem('daftarBuku')) || [];
+            document.getElementById('valTotalKoleksi').innerText = daftarBuku.length;
+
+            // Hitung Kategori Unik
+            let uniqueKategori = [...new Set(daftarBuku.map(item => item.kategori))];
+            document.getElementById('valTotalKategori').innerText = uniqueKategori.length;
+
+            // 2. Ambil Data Transaksi dari LocalStorage
+            let daftarPinjam = JSON.parse(localStorage.getItem('daftarPinjam')) || [];
+            let totalPinjam = daftarPinjam.length;
+            let totalKembali = daftarPinjam.filter(item => item.status === "Kembali").length;
+
+            document.getElementById('valTotalPinjam').innerText = totalPinjam;
+            document.getElementById('valTotalKembali').innerText = totalKembali;
+        }
+
+        // Fitur Pencarian di Dashboard
+        function filterDashboard() {
+            const keyword = document.getElementById('inputCariDashboard').value.toLowerCase();
+            const cards = document.querySelectorAll('.card-stat');
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title');
+                if(title.includes(keyword)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        function toggleDropdownTransaksi() {
+            document.getElementById('subTransaksi').classList.toggle('hidden');
+            document.getElementById('transaksiArrow').classList.toggle('rotate-180');
+        }
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('md:w-64');
+            sidebar.classList.toggle('w-16');
+        }
+        function toggleProfilModal() {
+            document.getElementById('profilModal').classList.toggle('hidden');
+        }
+
+        // Jalankan saat halaman dimuat
+        muatStatistikDashboard();
+    </script>
+</body>
+</html>
